@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:ebandhu/features/user/user.dart';
+
+import 'features/home/home.dart';
+import 'features/orders/orders.dart';
+import 'features/user/user.dart';
+import 'features/wishlist/presentation/pages/wishlist_page.dart';
 
 class InitialPage extends StatefulWidget {
   const InitialPage({super.key});
@@ -9,8 +13,8 @@ class InitialPage extends StatefulWidget {
 }
 
 class _InitialPageState extends State<InitialPage> {
-  final PageController _pageViewController = PageController(initialPage: 3);
-  int currentindex = 3;
+  final PageController _pageViewController = PageController(initialPage: 0);
+  int currentindex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +25,7 @@ class _InitialPageState extends State<InitialPage> {
             currentindex = index;
           });
         },
-        children: [Placeholder(), Placeholder(), Placeholder(), UserPage()],
+        children: [HomePage(), OrdersPage(), WishlistPage(), UserPage()],
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: currentindex,

@@ -1,4 +1,7 @@
+import 'package:ebandhu/di.dart';
+import 'package:ebandhu/features/auth/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPage extends StatefulWidget {
   @override
@@ -27,12 +30,13 @@ class _UserPage extends State<UserPage> {
         Icons.password: {"Change Password": () {}},
       },
     ],
-    'Geneal': [
+    'Preferencess': [
       {
-        Icons.person: {"Edit Profile": () {}},
-      },
-      {
-        Icons.password: {"Change Password": () {}},
+        Icons.exit_to_app: {
+          "Logout": () {
+            sl<AuthBloc>().add(LogoutEvent());
+          },
+        },
       },
     ],
   };

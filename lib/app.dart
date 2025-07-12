@@ -11,7 +11,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => sl<AuthBloc>())],
+      providers: [
+        //do not use BlocProvider(create:...) for auth bloc as it is already regestered in di,
+        //else you’ll have two separate AuthBloc instances.
+        BlocProvider<AuthBloc>.value(value: sl<AuthBloc>()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
