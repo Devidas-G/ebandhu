@@ -22,14 +22,6 @@ class _UserPage extends State<UserPage> {
         Icons.password: {"Change Password": () {}},
       },
     ],
-    'Genera': [
-      {
-        Icons.person: {"Edit Profile": () {}},
-      },
-      {
-        Icons.password: {"Change Password": () {}},
-      },
-    ],
     'Preferencess': [
       {
         Icons.exit_to_app: {
