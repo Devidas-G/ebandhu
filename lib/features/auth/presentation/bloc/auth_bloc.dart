@@ -44,10 +44,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         userName: event.userName,
       ),
     );
-    // result.fold(
-    //   (failure) => emit(AuthError(failure.message)),
-    //   (user) => emit(AuthAuthenticated(user)),
-    // );
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (user) => emit(AuthLoggedIn(user)),
+    );
   }
 
   Future<void> _onLogin(LoginEvent event, Emitter<AuthState> emit) async {
@@ -55,10 +55,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     final result = await login(
       LoginParams(email: event.email, password: event.password),
     );
-    // result.fold(
-    //   (failure) => emit(AuthError(failure.message)),
-    //   (user) => emit(AuthAuthenticated(user)),
-    // );
+    result.fold(
+      (failure) => emit(AuthError(failure.message)),
+      (user) => emit(AuthLoggedIn(user)),
+    );
   }
 
   Future<void> _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {

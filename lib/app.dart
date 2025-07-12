@@ -1,11 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'di.dart';
-import 'features/auth/presentation/bloc/auth_bloc.dart';
-import 'features/auth/presentation/pages/auth_page.dart';
-import 'home_page.dart';
+import 'features/auth/auth.dart';
+import 'initial_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,6 +29,13 @@ class MyApp extends StatelessWidget {
               borderSide: BorderSide(color: Theme.of(context).primaryColor),
             ),
           ),
+
+          // BottomNavigationBar theme
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            type: BottomNavigationBarType.fixed,
+            selectedItemColor: Theme.of(context).primaryColor,
+            unselectedItemColor: Colors.grey[500],
+          ),
         ),
         home: Wrapper(),
       ),
@@ -51,7 +56,7 @@ class Wrapper extends StatelessWidget {
             child: CircularProgressIndicator(),
           ); // optional loading screen
         } else if (snapshot.hasData) {
-          return HomePage(); // user is logged in
+          return InitialPage(); // user is logged in
         } else {
           return AuthPage(); // user is not logged in
         }

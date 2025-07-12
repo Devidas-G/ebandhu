@@ -200,6 +200,8 @@ class _SignupPageState extends State<SignupPage> {
                       ScaffoldMessenger.of(
                         context,
                       ).showSnackBar(SnackBar(content: Text(state.message)));
+                    } else if (state is AuthLoggedIn) {
+                      Navigator.of(context).pop();
                     }
                   },
                   builder: (context, state) {
