@@ -8,6 +8,34 @@ class OrdersPage extends StatefulWidget {
 class _OrdersPage extends State<OrdersPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar());
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text("My Orders"),
+          actions: [
+            IconButton(onPressed: () {}, icon: Icon(Icons.shopping_bag)),
+          ],
+          bottom: TabBar(
+            dividerColor: Colors.transparent,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicator: UnderlineTabIndicator(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(10),
+                topRight: Radius.circular(10),
+              ),
+              borderSide: BorderSide(
+                width: 3.0,
+                color: Theme.of(context).primaryColor,
+              ),
+              insets: EdgeInsets.symmetric(horizontal: 30), // adjust for ~70%
+            ),
+            unselectedLabelColor: Colors.grey,
+            tabs: [Tab(text: "My Orders"), Tab(text: "History")],
+          ),
+        ),
+      ),
+    );
   }
 }
