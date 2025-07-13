@@ -25,9 +25,14 @@ class _SearchPage extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 0,
         automaticallyImplyLeading: false,
-        titleSpacing: 0,
+        titleSpacing: 10,
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: Icon(Icons.arrow_back_ios),
+        ),
         title: Hero(
           tag: 'search-bar',
           flightShuttleBuilder: (_, animation, __, fromHero, toHero) {
@@ -41,34 +46,28 @@ class _SearchPage extends State<SearchPage> {
             return toHero.widget;
           },
           child: Material(
-            color: Colors.grey[200],
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    child: TextField(
-                      controller: _controller,
-                      focusNode: _focusNode,
-                      decoration: InputDecoration(
-                        hintText: "Search products...",
-                        border: InputBorder.none,
-                      ),
-                      onChanged: (query) {
-                        // TODO: Add search logic
-                      },
-                    ),
-                  ),
+            child: TextField(
+              controller: _controller,
+              focusNode: _focusNode,
+              decoration: InputDecoration(
+                isDense: true,
+                prefixIcon: Icon(Icons.search),
+                hintText: "Search products...",
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    print("object");
+                  },
+                  icon: Icon(Icons.settings),
                 ),
-                IconButton(
-                  icon: Icon(Icons.close),
-                  onPressed: () => Navigator.pop(context),
-                ),
-              ],
+              ),
+              onChanged: (query) {
+                // TODO: Add search logic
+              },
             ),
           ),
         ),
       ),
+      body: Placeholder(),
     );
   }
 }
