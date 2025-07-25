@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-
+import 'package:ebandhu/features/home/presentation/pages/home_tab_page.dart';
+import 'package:ebandhu/features/home/presentation/pages/category_tab_page.dart';
 import '../../../search/search.dart';
 
 class HomePage extends StatefulWidget {
   @override
-  createState() => _HomePage();
+  State<HomePage> createState() => _HomePage();
 }
 
 class _HomePage extends State<HomePage> {
@@ -18,17 +19,16 @@ class _HomePage extends State<HomePage> {
           automaticallyImplyLeading: false,
           titleSpacing: 10,
           title: GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                PageRouteBuilder(
-                  pageBuilder: (_, __, ___) => SearchPage(),
-                  transitionsBuilder:
-                      (_, anim, __, child) =>
-                          FadeTransition(opacity: anim, child: child),
+            onTap:
+                () => Navigator.push(
+                  context,
+                  PageRouteBuilder(
+                    pageBuilder: (_, __, ___) => SearchPage(),
+                    transitionsBuilder:
+                        (_, anim, __, child) =>
+                            FadeTransition(opacity: anim, child: child),
+                  ),
                 ),
-              );
-            },
             child: Hero(
               tag: "search-bar",
               child: Material(
@@ -38,10 +38,7 @@ class _HomePage extends State<HomePage> {
                   decoration: InputDecoration(
                     prefixIcon: Icon(Icons.search),
                     hintText: "Search...",
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 0,
-                      horizontal: 10,
-                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
                   ),
                 ),
               ),
@@ -54,44 +51,20 @@ class _HomePage extends State<HomePage> {
             dividerColor: Colors.transparent,
             indicatorSize: TabBarIndicatorSize.tab,
             indicator: UnderlineTabIndicator(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
-              ),
               borderSide: BorderSide(
-                width: 3.0,
+                width: 3,
                 color: Theme.of(context).primaryColor,
               ),
-              insets: EdgeInsets.symmetric(horizontal: 30), // adjust for ~70%
+              borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+              insets: EdgeInsets.symmetric(horizontal: 30),
             ),
             unselectedLabelColor: Colors.grey,
-            tabs: [Tab(text: "Home"), Tab(text: "Category")],
+            tabs: const [Tab(text: "Home"), Tab(text: "Category")],
           ),
         ),
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15),
-            child: TabBarView(
-              children: [
-                // Tab 1: Home
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Text("Welcome to Home Page"),
-                    // Add more widgets for home tab here
-                  ],
-                ),
-                // Tab 2: Category
-                Column(
-                  children: [
-                    SizedBox(height: 10),
-                    Text("Browse Categories"),
-                    // Add more widgets for category tab here
-                  ],
-                ),
-              ],
-            ),
-          ),
+        body: const TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [HomeTabPage(), CategoryTabPage()],
         ),
       ),
     );

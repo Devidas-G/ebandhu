@@ -1,9 +1,10 @@
+import 'package:ebandhu/app/theme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'di.dart';
-import 'features/auth/auth.dart';
-import 'initial_page.dart';
+import '../di.dart';
+import '../features/auth/auth.dart';
+import '../initial_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,29 +19,8 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).primaryColor,
-              foregroundColor: Theme.of(context).scaffoldBackgroundColor,
-            ),
-          ),
-          inputDecorationTheme: InputDecorationTheme(
-            hintStyle: TextStyle(color: Colors.grey[600]),
-            prefixIconColor: Theme.of(context).primaryColor,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(15),
-              borderSide: BorderSide(color: Theme.of(context).primaryColor),
-            ),
-          ),
-
-          // BottomNavigationBar theme
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            type: BottomNavigationBarType.fixed,
-            selectedItemColor: Theme.of(context).primaryColor,
-            unselectedItemColor: Colors.grey[500],
-          ),
-        ),
+        theme: AppTheme.lightTheme,
+        darkTheme: AppTheme.darkTheme,
         home: Wrapper(),
       ),
     );

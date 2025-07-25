@@ -88,13 +88,9 @@ class _AuthPage extends State<AuthPage> {
                         ),
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: (Theme.of(context).brightness ==
-                                      Brightness.dark
-                                  ? Colors.white
-                                  : Colors.black)
-                              .withOpacity(
-                                _currentCarousel == entry.key ? 0.9 : 0.4,
-                              ),
+                          color: Theme.of(context).primaryColor.withValues(
+                            alpha: _currentCarousel == entry.key ? 0.9 : 0.4,
+                          ),
                         ),
                       ),
                     );

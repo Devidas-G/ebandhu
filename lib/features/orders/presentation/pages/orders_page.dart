@@ -1,3 +1,5 @@
+import 'package:ebandhu/features/orders/presentation/pages/history_tab_page.dart';
+import 'package:ebandhu/features/orders/presentation/pages/orders_tab_page.dart';
 import 'package:flutter/material.dart';
 
 class OrdersPage extends StatefulWidget {
@@ -34,6 +36,10 @@ class _OrdersPage extends State<OrdersPage> {
             unselectedLabelColor: Colors.grey,
             tabs: [Tab(text: "My Orders"), Tab(text: "History")],
           ),
+        ),
+        body: TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [OrdersTabPage(), HistoryTabPage()],
         ),
       ),
     );
