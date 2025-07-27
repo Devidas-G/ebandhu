@@ -20,10 +20,10 @@ final class ProductLoaded extends ProductState {
 }
 
 final class ProductError extends ProductState {
-  final String message;
+  final String errorMessage;
 
-  const ProductError(this.message);
+  const ProductError(this.errorMessage);
 
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [errorMessage];
 }

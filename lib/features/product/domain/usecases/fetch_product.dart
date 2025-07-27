@@ -9,6 +9,6 @@ class FetchProduct implements UseCase<ProductEntity, int> {
   FetchProduct(this.repository);
   @override
   ResultFuture<ProductEntity> call(int productId) async {
-    return await repository.fetchProduct();
+    return await repository.fetchProduct(productId);
   }
 }
