@@ -1,4 +1,6 @@
-import 'package:ebandhu/app/theme.dart';
+import 'theme.dart';
+import '../features/home/home.dart';
+import '../features/product/presentation/bloc/product_bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,8 @@ class MyApp extends StatelessWidget {
         //do not use BlocProvider(create:...) for auth bloc as it is already regestered in di,
         //else you’ll have two separate AuthBloc instances.
         BlocProvider<AuthBloc>.value(value: sl<AuthBloc>()),
+        BlocProvider(create: (context) => sl<HomeBloc>()),
+        BlocProvider(create: (context) => sl<ProductBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

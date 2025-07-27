@@ -8,14 +8,14 @@ import '../../domain/repositories/auth_repository.dart';
 import '../datasources/firebase_auth_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final FirebaseAuthDataSource dataSource;
+  final FirebaseAuthDataSource datasource;
 
-  AuthRepositoryImpl({required this.dataSource});
+  AuthRepositoryImpl({required this.datasource});
 
   @override
   ResultFuture<UserEntity> login(String email, String password) async {
     try {
-      final user = await dataSource.login(email, password);
+      final user = await datasource.login(email, password);
       return Right(user);
     } on AuthException catch (e) {
       return Left(AuthFailure(e.code));
@@ -31,7 +31,7 @@ class AuthRepositoryImpl implements AuthRepository {
     String userName,
   ) async {
     try {
-      final user = await dataSource.signup(email, password, userName);
+      final user = await datasource.signup(email, password, userName);
       return Right(user);
     } on AuthException catch (e) {
       return Left(AuthFailure(e.code));
@@ -43,7 +43,7 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   VoidResult logout() async {
     try {
-      await dataSource.logout();
+      await datasource.logout();
       return const Right(unit);
     } catch (e) {
       return Left(AuthFailure(e.toString()));

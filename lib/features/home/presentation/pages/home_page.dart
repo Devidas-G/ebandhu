@@ -45,7 +45,10 @@ class _HomePage extends State<HomePage> {
             ),
           ),
           actions: [
-            IconButton(onPressed: () {}, icon: Icon(Icons.shopping_bag)),
+            IconButton(
+              onPressed: () {},
+              icon: Icon(Icons.shopping_bag_outlined),
+            ),
           ],
           bottom: TabBar(
             dividerColor: Colors.transparent,
