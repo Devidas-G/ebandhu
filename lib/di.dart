@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'features/auth/auth.dart';
 import 'features/home/home.dart';
 import 'features/product/product.dart';
+import 'features/search/search.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> init() async {
@@ -54,6 +55,20 @@ Future<void> init() async {
   sl.registerLazySingleton<ProductRemoteDatasource>(
     // TODO: Change To Real Datasource
     () => FakeStoreProductDatasource(),
+  );
+
+  //! Feature - Search
+  // Bloc
+  sl.registerFactory(() => SearchBloc(searchProducts: sl()));
+  // Usecases
+  sl.registerLazySingleton(() => SearchProducts(sl()));
+  // Repositorys
+  sl.registerLazySingleton<SearchRepository>(
+    () => SearchRepositoryImpl(datasource: sl()),
+  );
+  // Datasources
+  sl.registerLazySingleton<SearchRemoteDataSource>(
+    () => FakeStoreSearchDatasource(),
   );
 
   //! Feature -

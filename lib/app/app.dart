@@ -1,3 +1,4 @@
+import '../features/search/search.dart';
 import 'theme.dart';
 import '../features/home/home.dart';
 import '../features/product/presentation/bloc/product_bloc.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         BlocProvider<AuthBloc>.value(value: sl<AuthBloc>()),
         BlocProvider(create: (context) => sl<HomeBloc>()),
         BlocProvider(create: (context) => sl<ProductBloc>()),
+        BlocProvider(create: (context) => sl<SearchBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

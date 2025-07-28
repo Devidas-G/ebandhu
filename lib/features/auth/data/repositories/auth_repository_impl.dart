@@ -1,11 +1,12 @@
 import 'package:dartz/dartz.dart';
+
 import '../../../../core/errors/exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/typedef.dart';
-
 import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/firebase_auth_datasource.dart';
+import '../models/user.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuthDataSource datasource;
@@ -13,7 +14,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.datasource});
 
   @override
-  ResultFuture<UserEntity> login(String email, String password) async {
+  ResultFuture<User> login(String email, String password) async {
     try {
       final user = await datasource.login(email, password);
       return Right(user);
@@ -25,7 +26,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  ResultFuture<UserEntity> signup(
+  ResultFuture<User> signup(
     String email,
     String password,
     String userName,
