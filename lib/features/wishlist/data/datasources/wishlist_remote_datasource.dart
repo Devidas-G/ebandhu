@@ -1,6 +1,8 @@
+import '../models/product.dart';
+
 abstract class WishlistRemoteDataSource {
-  Future<void> addToWishlist(String productId);
-  Future<void> removeFromWishlist(String productId);
-  Future<List<String>> getWishlist();
+  Future<List<Product>> addToWishlist(Product product);
+  Future<List<Product>> removeFromWishlist(int productId);
+  Future<List<Product>> fetchWishlist();
   Future<void> clearWishlist();
 }

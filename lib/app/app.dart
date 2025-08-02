@@ -1,5 +1,6 @@
 import '../features/cart/cart.dart';
 import '../features/search/search.dart';
+import '../features/wishlist/wishlist.dart';
 import 'theme.dart';
 import '../features/home/home.dart';
 import '../features/product/presentation/bloc/product_bloc.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context) => sl<ProductBloc>()),
         BlocProvider(create: (context) => sl<SearchBloc>()),
         BlocProvider(create: (context) => sl<CartBloc>()),
+        BlocProvider(create: (context) => sl<WishlistBloc>()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

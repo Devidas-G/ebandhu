@@ -1,6 +1,9 @@
+import '../../../../core/utils/typedef.dart';
+import '../entities/product.dart';
+
 abstract class WishlistRepository {
-  Future<void> addToWishlist(String productId);
-  Future<void> removeFromWishlist(String productId);
-  Future<List<String>> getWishlist();
-  Future<void> clearWishlist();
+  ResultFuture<List<ProductEntity>> addToWishlist(ProductEntity product);
+  ResultFuture<List<ProductEntity>> removeFromWishlist(int productId);
+  ResultFuture<List<ProductEntity>> fetchWishlist();
+  ResultFuture<void> clearWishlist();
 }

@@ -7,6 +7,7 @@ import 'features/cart/cart.dart';
 import 'features/home/home.dart';
 import 'features/product/product.dart';
 import 'features/search/search.dart';
+import 'features/wishlist/wishlist.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> init() async {
@@ -101,6 +102,35 @@ Future<void> init() async {
   // Datasources
   sl.registerLazySingleton<CartRemoteDataSource>(
     () => FirebaseCartDatasource(
+      firestore: sl<FirebaseFirestore>(),
+      userId: sl<FirebaseAuth>().currentUser?.uid,
+    ),
+  );
+
+  //! Feature - Wishlist
+  // Bloc
+  sl.registerFactory(
+    () => WishlistBloc(
+      fetchWishlist: sl(),
+      addToWishlist: sl(),
+      removeFromWishlist: sl(),
+      clearWishlist: sl(),
+    ),
+  );
+
+  // Usecases
+  sl.registerLazySingleton(() => AddToWishlist(sl()));
+  sl.registerLazySingleton(() => RemoveFromWishlist(sl()));
+  sl.registerLazySingleton(() => FetchWishlist(sl()));
+  sl.registerLazySingleton(() => ClearWishlist(sl()));
+
+  // Repositorys
+  sl.registerLazySingleton<WishlistRepository>(
+    () => WishlistRepositoryImpl(dataSource: sl()),
+  );
+  // Datasources
+  sl.registerLazySingleton<WishlistRemoteDataSource>(
+    () => FirebaseWishlistDatasource(
       firestore: sl<FirebaseFirestore>(),
       userId: sl<FirebaseAuth>().currentUser?.uid,
     ),

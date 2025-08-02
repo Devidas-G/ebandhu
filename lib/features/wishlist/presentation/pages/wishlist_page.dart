@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/wishlist_bloc.dart';
 
 class WishlistPage extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class _WishlistPage extends State<WishlistPage> {
   @override
   void initState() {
     super.initState();
+    context.read<WishlistBloc>().add(FetchWishlistEvent());
   }
 
   @override
@@ -55,6 +59,41 @@ class _WishlistPage extends State<WishlistPage> {
               },
             ),
           ),
+        ),
+        body: BlocBuilder<WishlistBloc, WishlistState>(
+          builder: (context, state) {
+            if (state is WishlistLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is WishlistLoaded) {
+              //if wishlist is empty, show a message
+              if (state.products.isEmpty) {
+                return Center(child: Text("Your wishlist is empty"));
+              }
+              return ListView.builder(
+                itemCount: state.products.length,
+                itemBuilder: (context, index) {
+                  final product = state.products[index];
+                  return ListTile(
+                    title: Text(product.title),
+                    subtitle: Text("Price: \$${product.price}"),
+                    trailing: IconButton(
+                      icon: Icon(Icons.remove_circle_outline),
+                      onPressed: () {
+                        context.read<WishlistBloc>().add(
+                          RemoveItemEvent(product.id),
+                        );
+                      },
+                    ),
+                  );
+                },
+              );
+            } else if (state is WishlistError) {
+              return Center(
+                child: Text("Error loading wishlist: ${state.message}"),
+              );
+            }
+            return Container();
+          },
         ),
       ),
     );

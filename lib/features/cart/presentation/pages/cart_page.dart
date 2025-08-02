@@ -55,7 +55,7 @@ class _CartPage extends State<CartPage> {
               },
             );
           } else if (state is CartError) {
-            return Center(child: Text("Error loading cart"));
+            return Center(child: Text("Error loading cart: ${state.message}"));
           }
           return Container();
         },

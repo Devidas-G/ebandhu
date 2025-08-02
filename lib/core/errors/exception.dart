@@ -16,3 +16,13 @@ class CartException implements Exception {
   @override
   String toString() => 'CartException($code): $message';
 }
+
+class WishlistException implements Exception {
+  final String message;
+  final String code;
+
+  WishlistException({required this.message, this.code = 'unknown'});
+
+  @override
+  String toString() => 'WishlistException($code): $message';
+}

@@ -61,7 +61,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final result = await addItemToCart(event.item);
     result.fold(
       (failure) => emit(CartError(failure.message)),
-      (cart) => emit(CartLoaded(cart)),
+      (products) => emit(CartLoaded(products)),
     );
   }
 
@@ -73,7 +73,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     final result = await removeItemFromCart(event.productId);
     result.fold(
       (failure) => emit(CartError(failure.message)),
-      (cart) => emit(CartLoaded(cart)),
+      (products) => emit(CartLoaded(products)),
     );
   }
 
