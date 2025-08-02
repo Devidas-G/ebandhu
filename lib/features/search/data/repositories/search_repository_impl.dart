@@ -17,7 +17,7 @@ class SearchRepositoryImpl implements SearchRepository {
       final products = await datasource.search(query);
       return Right(products);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(e.toString(), 'unknown'));
     }
   }
 }

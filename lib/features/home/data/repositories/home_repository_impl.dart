@@ -15,7 +15,7 @@ class HomeRepositoryImpl implements HomeRepository {
       final products = await datasource.fetchContent();
       return Right(products);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(e.toString(), 'unknown'));
     }
   }
 }

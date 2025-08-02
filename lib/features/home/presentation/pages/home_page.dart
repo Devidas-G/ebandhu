@@ -1,6 +1,5 @@
+import '../../../cart/presentation/pages/cart_page.dart';
 import 'package:flutter/material.dart';
-import 'package:ebandhu/features/home/presentation/pages/home_tab_page.dart';
-import 'package:ebandhu/features/home/presentation/pages/category_tab_page.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../search/search.dart';
 import '../bloc/home_bloc.dart';
@@ -58,7 +57,15 @@ class _HomePage extends State<HomePage> {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.shopping_bag_outlined)),
+          IconButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => CartPage()),
+              );
+            },
+            icon: Icon(Icons.shopping_bag_outlined),
+          ),
         ],
       ),
       body: BlocBuilder<HomeBloc, HomeState>(

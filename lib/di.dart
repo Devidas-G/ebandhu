@@ -1,12 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
 import 'features/auth/auth.dart';
+import 'features/cart/cart.dart';
 import 'features/home/home.dart';
 import 'features/product/product.dart';
 import 'features/search/search.dart';
 
 final GetIt sl = GetIt.instance;
 Future<void> init() async {
+  //! Firebase core services
+  sl.registerLazySingleton(() => FirebaseAuth.instance);
+  sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
   //! Features - Auth
   // Bloc
   sl.registerLazySingleton<AuthBloc>(
@@ -23,8 +30,8 @@ Future<void> init() async {
   );
 
   // Data sources
-  sl.registerLazySingleton<FirebaseAuthDataSource>(
-    () => FirebaseAuthDataSourceImpl(),
+  sl.registerLazySingleton<AuthRemoteDataSource>(
+    () => FirebaseAuthDataSourceImpl(auth: sl<FirebaseAuth>()),
   );
 
   //! Feature - Home
@@ -69,6 +76,34 @@ Future<void> init() async {
   // Datasources
   sl.registerLazySingleton<SearchRemoteDataSource>(
     () => FakeStoreSearchDatasource(),
+  );
+
+  //! Feature - Cart
+  // Bloc
+  sl.registerFactory(
+    () => CartBloc(
+      clearCart: sl(),
+      fetchCart: sl(),
+      addItemToCart: sl(),
+      removeItemFromCart: sl(),
+    ),
+  );
+  // Usecases
+  sl.registerLazySingleton(() => FetchCart(sl()));
+  sl.registerLazySingleton(() => AddItemToCart(sl()));
+  sl.registerLazySingleton(() => RemoveItemFromCart(sl()));
+  sl.registerLazySingleton(() => ClearCart(sl()));
+  // Repositorys
+  sl.registerLazySingleton<CartRepository>(
+    () => CartRepositoryImpl(datasource: sl()),
+  );
+
+  // Datasources
+  sl.registerLazySingleton<CartRemoteDataSource>(
+    () => FirebaseCartDatasource(
+      firestore: sl<FirebaseFirestore>(),
+      userId: sl<FirebaseAuth>().currentUser?.uid,
+    ),
   );
 
   //! Feature -

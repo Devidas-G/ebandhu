@@ -3,13 +3,12 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/exception.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/typedef.dart';
-import '../../domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../datasources/firebase_auth_datasource.dart';
+import '../datasources/auth_remote_datasource.dart';
 import '../models/user.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
-  final FirebaseAuthDataSource datasource;
+  final AuthRemoteDataSource datasource;
 
   AuthRepositoryImpl({required this.datasource});
 

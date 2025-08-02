@@ -1,15 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
+
 import '../../../../core/errors/exception.dart';
 import '../models/user.dart' as core;
+import 'auth_remote_datasource.dart';
 
-abstract class FirebaseAuthDataSource {
-  Future<core.User> signup(String email, String password, String userName);
-  Future<core.User> login(String email, String password);
-  Future<void> logout();
-}
+class FirebaseAuthDataSourceImpl implements AuthRemoteDataSource {
+  final FirebaseAuth auth;
 
-class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  FirebaseAuthDataSourceImpl({required this.auth});
 
   @override
   Future<core.User> signup(
@@ -18,7 +16,7 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
     String userName,
   ) async {
     try {
-      final UserCredential credential = await _auth
+      final UserCredential credential = await auth
           .createUserWithEmailAndPassword(email: email, password: password);
       if (credential.user == null) {
         throw AuthException(
@@ -35,14 +33,14 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
     } on FirebaseAuthException catch (e) {
       throw AuthException(message: e.message, code: e.code);
     } catch (e) {
-      throw AuthException(message: e.toString(), code: 'unknown');
+      throw AuthException(message: e.toString());
     }
   }
 
   @override
   Future<core.User> login(String email, String password) async {
     try {
-      final credential = await _auth.signInWithEmailAndPassword(
+      final credential = await auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
@@ -59,16 +57,16 @@ class FirebaseAuthDataSourceImpl implements FirebaseAuthDataSource {
     } on FirebaseAuthException catch (e) {
       throw AuthException(message: e.message ?? 'Unknown error', code: e.code);
     } catch (e) {
-      throw AuthException(message: e.toString(), code: 'unknown');
+      throw AuthException(message: e.toString());
     }
   }
 
   @override
   Future<void> logout() async {
     try {
-      await _auth.signOut();
+      await auth.signOut();
     } catch (e) {
-      throw AuthException(message: e.toString(), code: 'unknown');
+      throw AuthException(message: e.toString());
     }
   }
 }

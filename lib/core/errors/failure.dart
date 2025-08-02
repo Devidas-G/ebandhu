@@ -14,5 +14,9 @@ class AuthFailure extends Failure {
 }
 
 class ApiFailure extends Failure {
-  const ApiFailure(super.message);
+  final String code;
+  const ApiFailure(super.message, this.code);
+
+  @override
+  List<Object> get props => [message, code];
 }

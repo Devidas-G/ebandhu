@@ -1,4 +1,8 @@
+import '../widgets/product_grid.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../bloc/search_bloc.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -61,13 +65,24 @@ class _SearchPage extends State<SearchPage> {
                 ),
               ),
               onChanged: (query) {
-                // TODO: Add search logic
+                context.read<SearchBloc>().add(SearchQueryChanged(query));
               },
             ),
           ),
         ),
       ),
-      body: Placeholder(),
+      body: BlocBuilder<SearchBloc, SearchState>(
+        builder: (context, state) {
+          if (state is SearchLoading) {
+            return Center(child: CircularProgressIndicator());
+          } else if (state is SearchLoaded) {
+            return ProductGrid(products: state.products);
+          } else if (state is SearchError) {
+            return Center(child: Text('Error: ${state.message}'));
+          }
+          return Center(child: Text('Start searching...'));
+        },
+      ),
     );
   }
 }

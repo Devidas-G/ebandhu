@@ -20,4 +20,17 @@ class Product extends ProductEntity {
       _$ProductFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProductToJson(this);
+
+  /// Custom factory to convert from Entity
+  factory Product.fromEntity(ProductEntity entity) {
+    return Product(
+      id: entity.id,
+      title: entity.title,
+      price: entity.price,
+      description: entity.description,
+      category: entity.category,
+      image: entity.image,
+      rating: entity.rating,
+    );
+  }
 }

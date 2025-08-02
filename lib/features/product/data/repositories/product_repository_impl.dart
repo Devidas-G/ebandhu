@@ -15,7 +15,7 @@ class ProductRepositoryImpl extends ProductRepository {
       final product = await datasource.fetchProduct(productId);
       return Right(product);
     } catch (e) {
-      return Left(ApiFailure(e.toString()));
+      return Left(ApiFailure(e.toString(), 'unknown'));
     }
   }
 }

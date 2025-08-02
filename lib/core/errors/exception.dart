@@ -2,17 +2,17 @@ class AuthException implements Exception {
   final String code;
   final String? message;
 
-  AuthException({required this.code, this.message});
+  AuthException({this.code = 'unknown', this.message});
+  @override
+  String toString() => 'AuthException($code): $message';
 }
 
-class MatchException implements Exception {
-  final String? message;
+class CartException implements Exception {
+  final String message;
+  final String code;
 
-  MatchException({this.message});
-}
+  CartException({required this.message, this.code = 'unknown'});
 
-class SocketException implements Exception {
-  final String? message;
-
-  SocketException({this.message});
+  @override
+  String toString() => 'CartException($code): $message';
 }
