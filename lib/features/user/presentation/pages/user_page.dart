@@ -1,7 +1,6 @@
 import 'package:ebandhu/di.dart';
 import 'package:ebandhu/features/auth/auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class UserPage extends StatefulWidget {
   @override
