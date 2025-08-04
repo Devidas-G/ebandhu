@@ -51,6 +51,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
 
   Future<void> _fetchCart(FetchCartEvent event, Emitter<CartState> emit) async {
     emit(CartLoading());
+    final result = await fetchCart(NoParams());
+    result.fold(
+      (failure) => emit(CartError(failure.message)),
+      (products) => emit(CartLoaded(products)),
+    );
   }
 
   Future<void> _addItemToCart(
