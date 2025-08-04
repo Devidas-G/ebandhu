@@ -13,10 +13,18 @@ final class ProductLoading extends ProductState {}
 
 final class ProductLoaded extends ProductState {
   final ProductEntity product;
+  final bool isFavorite;
 
-  const ProductLoaded(this.product);
+  const ProductLoaded(this.product, {this.isFavorite = false});
   @override
-  List<Object> get props => [product];
+  List<Object> get props => [product, isFavorite];
+
+  ProductLoaded copyWith({ProductEntity? product, bool? isFavorite}) {
+    return ProductLoaded(
+      product ?? this.product,
+      isFavorite: isFavorite ?? this.isFavorite,
+    );
+  }
 }
 
 final class ProductError extends ProductState {

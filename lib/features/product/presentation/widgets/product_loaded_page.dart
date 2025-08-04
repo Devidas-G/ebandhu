@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../wishlist/wishlist.dart';
 import '../../domain/entities/product.dart';
+import '../../product.dart';
 
 class ProductLoadedPage extends StatelessWidget {
-  const ProductLoadedPage({super.key, required this.product});
+  const ProductLoadedPage({
+    super.key,
+    required this.product,
+    required this.isFavorite,
+  });
   final ProductEntity product;
+  final bool isFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +22,42 @@ class ProductLoadedPage extends StatelessWidget {
           child: ListView(
             children: [
               // Display product image
-              SizedBox(height: 300, child: Image.network(product.image)),
+              Stack(
+                children: [
+                  SizedBox(
+                    width: double.infinity,
+                    height: 300,
+                    child: Image.network(product.image),
+                  ),
+                  BlocListener<WishlistBloc, WishlistState>(
+                    listener: (context, state) {
+                      if (state is WishlistLoaded) {
+                        context.read<ProductBloc>().add(
+                          CheckFavoriteStatusEvent(productId: product.id),
+                        );
+                      }
+                    },
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: IconButton(
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: Colors.redAccent,
+                          size: 28,
+                        ),
+                        onPressed: () {
+                          final wishlistBloc = context.read<WishlistBloc>();
+                          if (isFavorite) {
+                            wishlistBloc.add(RemoveItemEvent(product.id));
+                          } else {
+                            wishlistBloc.add(AddItemEvent(product));
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
               // Display product name
               Padding(
                 padding: const EdgeInsets.all(8.0),

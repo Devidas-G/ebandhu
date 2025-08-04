@@ -14,3 +14,12 @@ class FetchProductEvent extends ProductEvent {
   @override
   List<Object> get props => [productId];
 }
+
+final class CheckFavoriteStatusEvent extends ProductEvent {
+  final int productId;
+
+  const CheckFavoriteStatusEvent({required this.productId});
+
+  @override
+  List<Object> get props => [productId];
+}

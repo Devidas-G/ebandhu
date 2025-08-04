@@ -20,9 +20,15 @@ const throttleDuration = Duration(milliseconds: 100);
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   //usecases
   final FetchProduct fetchProduct;
-  ProductBloc({required this.fetchProduct}) : super(ProductInitial()) {
+  final FavoriteStatus favoriteStatus;
+  ProductBloc({required this.fetchProduct, required this.favoriteStatus})
+    : super(ProductInitial()) {
     on<FetchProductEvent>(
       _fetchProduct,
+      transformer: throttleDroppable(throttleDuration),
+    );
+    on<CheckFavoriteStatusEvent>(
+      _checkFavoriteStatus,
       transformer: throttleDroppable(throttleDuration),
     );
   }
@@ -36,6 +42,23 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
     result.fold(
       (failure) => emit(ProductError(failure.message)),
       (product) => emit(ProductLoaded(product)),
+    );
+  }
+
+  Future<void> _checkFavoriteStatus(
+    CheckFavoriteStatusEvent event,
+    Emitter<ProductState> emit,
+  ) async {
+    final result = await favoriteStatus(event.productId);
+    result.fold(
+      (failure) {
+        // Optionally emit an error or just ignore.
+      },
+      (isFavorite) {
+        if (state is ProductLoaded) {
+          emit((state as ProductLoaded).copyWith(isFavorite: isFavorite));
+        }
+      },
     );
   }
 }

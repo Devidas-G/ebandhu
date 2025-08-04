@@ -26,7 +26,6 @@ class ProductGrid extends StatelessWidget {
         final product = products[index];
         return ProductCard(
           product: product,
-          onFavoriteToggle: () {},
           onTap: () {
             Navigator.of(context).push(
               MaterialPageRoute(

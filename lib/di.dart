@@ -52,9 +52,12 @@ Future<void> init() async {
 
   //! Feature - Product
   // Bloc
-  sl.registerFactory(() => ProductBloc(fetchProduct: sl()));
+  sl.registerFactory(
+    () => ProductBloc(fetchProduct: sl(), favoriteStatus: sl()),
+  );
   // Usecases
   sl.registerLazySingleton(() => FetchProduct(sl()));
+  sl.registerLazySingleton(() => FavoriteStatus(sl()));
   // Repositorys
   sl.registerLazySingleton<ProductRepository>(
     () => ProductRepositoryImpl(datasource: sl()),
@@ -62,7 +65,10 @@ Future<void> init() async {
   // Datasources
   sl.registerLazySingleton<ProductRemoteDatasource>(
     // TODO: Change To Real Datasource
-    () => FakeStoreProductDatasource(),
+    () => FakeStoreProductDatasource(
+      firestore: sl<FirebaseFirestore>(),
+      userId: sl<FirebaseAuth>().currentUser?.uid,
+    ),
   );
 
   //! Feature - Search
