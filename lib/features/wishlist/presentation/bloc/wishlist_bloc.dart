@@ -35,11 +35,11 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
       _fetchWishlist,
       transformer: throttleDroppable(throttleDuration),
     );
-    on<AddItemEvent>(
+    on<AddProductToWishlistEvent>(
       _addToWishlist,
       transformer: throttleDroppable(throttleDuration),
     );
-    on<RemoveItemEvent>(
+    on<RemoveProductFromWishlistEvent>(
       _removeFromWishlist,
       transformer: throttleDroppable(throttleDuration),
     );
@@ -62,7 +62,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   }
 
   Future<void> _addToWishlist(
-    AddItemEvent event,
+    AddProductToWishlistEvent event,
     Emitter<WishlistState> emit,
   ) async {
     emit(WishlistLoading());
@@ -74,7 +74,7 @@ class WishlistBloc extends Bloc<WishlistEvent, WishlistState> {
   }
 
   Future<void> _removeFromWishlist(
-    RemoveItemEvent event,
+    RemoveProductFromWishlistEvent event,
     Emitter<WishlistState> emit,
   ) async {
     emit(WishlistLoading());

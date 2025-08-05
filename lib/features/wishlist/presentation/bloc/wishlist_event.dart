@@ -7,19 +7,19 @@ sealed class WishlistEvent extends Equatable {
   List<Object> get props => [];
 }
 
-final class AddItemEvent extends WishlistEvent {
+final class AddProductToWishlistEvent extends WishlistEvent {
   final ProductEntity product;
 
-  const AddItemEvent(this.product);
+  const AddProductToWishlistEvent(this.product);
 
   @override
   List<Object> get props => [product];
 }
 
-final class RemoveItemEvent extends WishlistEvent {
+final class RemoveProductFromWishlistEvent extends WishlistEvent {
   final int productId;
 
-  const RemoveItemEvent(this.productId);
+  const RemoveProductFromWishlistEvent(this.productId);
 
   @override
   List<Object> get props => [productId];

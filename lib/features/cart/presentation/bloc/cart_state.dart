@@ -11,8 +11,26 @@ final class CartInitial extends CartState {}
 
 final class CartLoading extends CartState {}
 
+final class ProductAddedToCart extends CartState {
+  final ProductEntity product;
+
+  const ProductAddedToCart(this.product);
+
+  @override
+  List<Object> get props => [product];
+}
+
+final class ProductRemovedFromCart extends CartState {
+  final ProductEntity product;
+
+  const ProductRemovedFromCart(this.product);
+
+  @override
+  List<Object> get props => [product];
+}
+
 final class CartLoaded extends CartState {
-  final List<ProductEntity> cartProducts;
+  final List<CartProductEntity> cartProducts;
 
   const CartLoaded(this.cartProducts);
 

@@ -22,9 +22,6 @@ class _ProductPageState extends State<ProductPage> {
     context.read<ProductBloc>().add(
       FetchProductEvent(productId: widget.productId),
     );
-    context.read<ProductBloc>().add(
-      CheckFavoriteStatusEvent(productId: widget.productId),
-    );
   }
 
   @override
@@ -49,6 +46,9 @@ class _ProductPageState extends State<ProductPage> {
           if (state is ProductInitial || state is ProductLoading) {
             return ProductLoadingPage();
           } else if (state is ProductLoaded) {
+            context.read<ProductBloc>().add(
+              CheckFavoriteStatusEvent(productId: widget.productId),
+            );
             return ProductLoadedPage(
               product: state.product,
               isFavorite: state.isFavorite,

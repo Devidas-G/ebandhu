@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../cart/cart.dart';
 import '../../../wishlist/wishlist.dart';
 import '../../domain/entities/product.dart';
 import '../../product.dart';
@@ -31,6 +32,8 @@ class ProductLoadedPage extends StatelessWidget {
                   ),
                   BlocListener<WishlistBloc, WishlistState>(
                     listener: (context, state) {
+                      // Check if the wishlist state is loaded to update favorite status
+                      // This is to ensure that the favorite status is checked after the wishlist is updated
                       if (state is WishlistLoaded) {
                         context.read<ProductBloc>().add(
                           CheckFavoriteStatusEvent(productId: product.id),
@@ -48,9 +51,13 @@ class ProductLoadedPage extends StatelessWidget {
                         onPressed: () {
                           final wishlistBloc = context.read<WishlistBloc>();
                           if (isFavorite) {
-                            wishlistBloc.add(RemoveItemEvent(product.id));
+                            wishlistBloc.add(
+                              RemoveProductFromWishlistEvent(product.id),
+                            );
                           } else {
-                            wishlistBloc.add(AddItemEvent(product));
+                            wishlistBloc.add(
+                              AddProductToWishlistEvent(product),
+                            );
                           }
                         },
                       ),
@@ -112,25 +119,37 @@ class ProductLoadedPage extends StatelessWidget {
         // bottom buttons for add to cart and buy now
         Row(
           children: [
-            Expanded(
-              child: SizedBox(
-                height: 48,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        Theme.of(
-                          context,
-                        ).scaffoldBackgroundColor, // Set background color
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.zero,
+            BlocListener<CartBloc, CartState>(
+              listener: (context, state) {
+                if (state is ProductAddedToCart) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("${product.title} added to cart")),
+                  );
+                }
+              },
+              child: Expanded(
+                child: SizedBox(
+                  height: 48,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(
+                            context,
+                          ).scaffoldBackgroundColor, // Set background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.zero,
+                      ),
                     ),
-                  ),
-                  onPressed: () {
-                    // Handle add to cart action
-                  },
-                  child: Text(
-                    "Add to Cart",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    onPressed: () {
+                      // Handle add to cart action
+                      context.read<CartBloc>().add(
+                        AddProductToCartEvent(product, 1),
+                      );
+                    },
+                    child: Text(
+                      "Add to Cart",
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
                   ),
                 ),
               ),

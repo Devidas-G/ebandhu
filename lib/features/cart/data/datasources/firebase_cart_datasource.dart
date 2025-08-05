@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../core/errors/exception.dart';
-import '../models/product.dart';
+import '../models/cart_product.dart'; // now includes quantity + product
 import 'cart_remote_datasource.dart';
 
 class FirebaseCartDatasource implements CartRemoteDataSource {
@@ -20,10 +20,12 @@ class FirebaseCartDatasource implements CartRemoteDataSource {
       firestore.collection('users').doc(userId).collection('cart');
 
   @override
-  Future<List<Product>> fetchCartItems() async {
+  Future<List<CartProduct>> fetchCartItems() async {
     try {
       final snapshot = await _cartRef.get();
-      return snapshot.docs.map((doc) => Product.fromJson(doc.data())).toList();
+      return snapshot.docs
+          .map((doc) => CartProduct.fromJson(doc.data()))
+          .toList();
     } on FirebaseException catch (e) {
       throw CartException(
         message: e.message ?? 'Firestore error',
@@ -35,9 +37,26 @@ class FirebaseCartDatasource implements CartRemoteDataSource {
   }
 
   @override
-  Future<List<Product>> addToCart(Product product) async {
+  Future<List<CartProduct>> addToCart(CartProduct cartProduct) async {
     try {
-      await _cartRef.doc(product.id.toString()).set(product.toJson());
+      // First, check if item already exists
+      final doc = await _cartRef.doc(cartProduct.product.id.toString()).get();
+
+      int newQuantity = 1;
+      if (doc.exists) {
+        final existingCartProduct = CartProduct.fromJson(doc.data()!);
+        newQuantity = existingCartProduct.quantity + 1;
+      }
+
+      final newCartProduct = CartProduct(
+        product: cartProduct.product,
+        quantity: newQuantity,
+      );
+
+      await _cartRef
+          .doc(cartProduct.product.id.toString())
+          .set(newCartProduct.toJson());
+
       return await fetchCartItems();
     } on FirebaseException catch (e) {
       throw CartException(
@@ -52,7 +71,7 @@ class FirebaseCartDatasource implements CartRemoteDataSource {
   }
 
   @override
-  Future<List<Product>> removeFromCart(int productId) async {
+  Future<List<CartProduct>> removeFromCart(int productId) async {
     try {
       await _cartRef.doc(productId.toString()).delete();
       return await fetchCartItems();

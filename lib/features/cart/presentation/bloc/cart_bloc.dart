@@ -4,6 +4,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 import '../../../../core/common/usecase.dart';
+import '../../domain/entities/cart_product.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/usecases/usecases.dart';
 
@@ -35,11 +36,11 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       _fetchCart,
       transformer: throttleDroppable(throttleDuration),
     );
-    on<AddItemEvent>(
+    on<AddProductToCartEvent>(
       _addItemToCart,
       transformer: throttleDroppable(throttleDuration),
     );
-    on<RemoveItemEvent>(
+    on<RemoveProductFromCartEvent>(
       _removeItemFromCart,
       transformer: throttleDroppable(throttleDuration),
     );
@@ -59,27 +60,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   }
 
   Future<void> _addItemToCart(
-    AddItemEvent event,
+    AddProductToCartEvent event,
     Emitter<CartState> emit,
   ) async {
     emit(CartLoading());
-    final result = await addItemToCart(event.item);
-    result.fold(
-      (failure) => emit(CartError(failure.message)),
-      (products) => emit(CartLoaded(products)),
+    final result = await addItemToCart(
+      CartProductEntity(product: event.product, quantity: event.quantity),
     );
+    result.fold((failure) => emit(CartError(failure.message)), (products) {
+      emit(ProductAddedToCart(event.product));
+      emit(CartLoaded(products));
+    });
   }
 
   Future<void> _removeItemFromCart(
-    RemoveItemEvent event,
+    RemoveProductFromCartEvent event,
     Emitter<CartState> emit,
   ) async {
     emit(CartLoading());
-    final result = await removeItemFromCart(event.productId);
-    result.fold(
-      (failure) => emit(CartError(failure.message)),
-      (products) => emit(CartLoaded(products)),
-    );
+    final result = await removeItemFromCart(event.product.id);
+    result.fold((failure) => emit(CartError(failure.message)), (products) {
+      emit(ProductRemovedFromCart(event.product));
+      emit(CartLoaded(products));
+    });
   }
 
   Future<void> _clearCart(ClearCartEvent event, Emitter<CartState> emit) async {

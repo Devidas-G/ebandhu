@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../cart.dart';
+import '../widgets/cart_listview.dart';
 
 class CartPage extends StatefulWidget {
   @override
@@ -29,36 +30,41 @@ class _CartPage extends State<CartPage> {
         ),
         title: Text("My Cart"),
       ),
-      body: BlocBuilder<CartBloc, CartState>(
-        builder: (context, state) {
-          if (state is CartLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is CartLoaded) {
-            //if cart is empty, show a message
-            if (state.cartProducts.isEmpty) {
-              return Center(child: Text("Your cart is empty"));
-            }
-            return ListView.builder(
-              itemCount: state.cartProducts.length,
-              itemBuilder: (context, index) {
-                final product = state.cartProducts[index];
-                return ListTile(
-                  title: Text(product.title),
-                  subtitle: Text("Price: \$${product.price}"),
-                  trailing: IconButton(
-                    icon: Icon(Icons.remove_circle_outline),
-                    onPressed: () {
-                      context.read<CartBloc>().add(RemoveItemEvent(product.id));
-                    },
-                  ),
-                );
-              },
+      body: BlocListener<CartBloc, CartState>(
+        listener: (context, state) {
+          if (state is ProductRemovedFromCart) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text("${state.product.title} removed from cart"),
+              ),
             );
-          } else if (state is CartError) {
-            return Center(child: Text("Error loading cart: ${state.message}"));
           }
-          return Container();
         },
+        child: BlocBuilder<CartBloc, CartState>(
+          builder: (context, state) {
+            if (state is CartLoading) {
+              return Center(child: CircularProgressIndicator());
+            } else if (state is CartLoaded) {
+              //if cart is empty, show a message
+              if (state.cartProducts.isEmpty) {
+                return Center(child: Text("Your cart is empty"));
+              }
+              return CartListview(
+                cartProducts: state.cartProducts,
+                onRemove: (cartProduct) {
+                  context.read<CartBloc>().add(
+                    RemoveProductFromCartEvent(cartProduct.product),
+                  );
+                },
+              );
+            } else if (state is CartError) {
+              return Center(
+                child: Text("Error loading cart: ${state.message}"),
+              );
+            }
+            return Container();
+          },
+        ),
       ),
     );
   }

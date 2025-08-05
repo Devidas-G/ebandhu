@@ -80,7 +80,7 @@ class _WishlistPage extends State<WishlistPage> {
                       icon: Icon(Icons.remove_circle_outline),
                       onPressed: () {
                         context.read<WishlistBloc>().add(
-                          RemoveItemEvent(product.id),
+                          RemoveProductFromWishlistEvent(product.id),
                         );
                       },
                     ),
