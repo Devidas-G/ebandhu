@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
+import 'core/network/network_info.dart';
 import 'features/auth/auth.dart';
 import 'features/cart/cart.dart';
 import 'features/home/home.dart';
@@ -15,6 +17,9 @@ Future<void> init() async {
   //! Firebase core services
   sl.registerLazySingleton(() => FirebaseAuth.instance);
   sl.registerLazySingleton(() => FirebaseFirestore.instance);
+
+  //! NetworkInfo
+  sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(Connectivity()));
 
   //! Features - Auth
   // Bloc
