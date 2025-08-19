@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'features/auth/auth.dart';
 import 'features/cart/cart.dart';
 import 'features/home/home.dart';
+import 'features/orders/orders.dart';
 import 'features/product/product.dart';
 import 'features/search/search.dart';
 import 'features/wishlist/wishlist.dart';
@@ -93,12 +94,14 @@ Future<void> init() async {
       fetchCart: sl(),
       addItemToCart: sl(),
       removeItemFromCart: sl(),
+      updateItemInCart: sl(),
     ),
   );
   // Usecases
   sl.registerLazySingleton(() => FetchCart(sl()));
   sl.registerLazySingleton(() => AddItemToCart(sl()));
   sl.registerLazySingleton(() => RemoveItemFromCart(sl()));
+  sl.registerLazySingleton(() => UpdateItemInCart(sl()));
   sl.registerLazySingleton(() => ClearCart(sl()));
   // Repositorys
   sl.registerLazySingleton<CartRepository>(
@@ -137,6 +140,23 @@ Future<void> init() async {
   // Datasources
   sl.registerLazySingleton<WishlistRemoteDataSource>(
     () => FirebaseWishlistDatasource(
+      firestore: sl<FirebaseFirestore>(),
+      userId: sl<FirebaseAuth>().currentUser?.uid,
+    ),
+  );
+
+  //! Feature - Orders
+  // Bloc
+  sl.registerFactory(() => OrdersBloc(fetchOrders: sl()));
+  // Usecases
+  sl.registerLazySingleton(() => FetchOrders(sl()));
+  // Repositorys
+  sl.registerLazySingleton<OrdersRepository>(
+    () => OrdersRepositoryImpl(dataSource: sl()),
+  );
+  // Datasources
+  sl.registerLazySingleton<OrdersRemoteDataSource>(
+    () => FirebaseOrdersDataSource(
       firestore: sl<FirebaseFirestore>(),
       userId: sl<FirebaseAuth>().currentUser?.uid,
     ),

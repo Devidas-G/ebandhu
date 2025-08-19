@@ -3,6 +3,8 @@ import 'package:ebandhu/features/orders/presentation/pages/orders_tab_page.dart'
 import 'package:flutter/material.dart';
 
 class OrdersPage extends StatefulWidget {
+  const OrdersPage({super.key});
+
   @override
   createState() => _OrdersPage();
 }

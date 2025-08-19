@@ -7,6 +7,8 @@ import '../widgets/product_grid.dart';
 import '../widgets/sale_banner.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
   @override
   State<HomePage> createState() => _HomePage();
 }
@@ -74,7 +76,12 @@ class _HomePage extends State<HomePage> {
             return Column(
               children: [
                 Text(state.message),
-                ElevatedButton(onPressed: () {}, child: Text("Retry")),
+                ElevatedButton(
+                  onPressed: () {
+                    context.read<HomeBloc>().add(FetchContentEvent());
+                  },
+                  child: Text("Retry"),
+                ),
               ],
             );
           } else if (state is HomeLoaded) {

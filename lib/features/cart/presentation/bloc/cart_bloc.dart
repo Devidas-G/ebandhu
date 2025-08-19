@@ -4,6 +4,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 
 import '../../../../core/common/usecase.dart';
+import '../../../../core/errors/failure.dart';
 import '../../domain/entities/cart_product.dart';
 import '../../domain/entities/product.dart';
 import '../../domain/usecases/usecases.dart';
@@ -24,12 +25,14 @@ class CartBloc extends Bloc<CartEvent, CartState> {
   final FetchCart fetchCart;
   final AddItemToCart addItemToCart;
   final RemoveItemFromCart removeItemFromCart;
+  final UpdateItemInCart updateItemInCart;
   final ClearCart clearCart;
 
   CartBloc({
     required this.fetchCart,
     required this.addItemToCart,
     required this.removeItemFromCart,
+    required this.updateItemInCart,
     required this.clearCart,
   }) : super(CartInitial()) {
     on<FetchCartEvent>(
@@ -42,6 +45,10 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     );
     on<RemoveProductFromCartEvent>(
       _removeItemFromCart,
+      transformer: throttleDroppable(throttleDuration),
+    );
+    on<UpdateProductInCartEvent>(
+      _updateItemInCart,
       transformer: throttleDroppable(throttleDuration),
     );
     on<ClearCartEvent>(
@@ -63,14 +70,29 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     AddProductToCartEvent event,
     Emitter<CartState> emit,
   ) async {
-    emit(CartLoading());
+    final currentState = state;
+    // Optimistically keep current UI, show loader only optionally
+    if (currentState is CartLoaded) {
+      emit(CartLoading()); // Optional — only if you want a spinner
+    }
     final result = await addItemToCart(
       CartProductEntity(product: event.product, quantity: event.quantity),
     );
-    result.fold((failure) => emit(CartError(failure.message)), (products) {
-      emit(ProductAddedToCart(event.product));
-      emit(CartLoaded(products));
-    });
+    result.fold(
+      (failure) {
+        if (failure is ApiFailure && failure.code == 'item_exists') {
+          emit(CartItemAlreadyExists(event.product));
+
+          if (currentState is CartLoaded) emit(currentState);
+        } else {
+          emit(CartError(failure.message));
+        }
+      },
+      (products) {
+        emit(ProductAddedToCart(event.product));
+        emit(CartLoaded(products));
+      },
+    );
   }
 
   Future<void> _removeItemFromCart(
@@ -92,5 +114,34 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       (failure) => emit(CartError(failure.message)),
       (success) => emit(CartLoaded([])),
     );
+  }
+
+  Future<void> _updateItemInCart(
+    UpdateProductInCartEvent event,
+    Emitter<CartState> emit,
+  ) async {
+    final currentState = state;
+    if (currentState is CartLoaded) {
+      emit(
+        currentState.copyWith(
+          loadingProductIds: {
+            ...currentState.loadingProductIds,
+            event.cartProduct.product.id,
+          },
+        ),
+      );
+      final result = await updateItemInCart(event.cartProduct);
+      result.fold((failure) => emit(CartError(failure.message)), (products) {
+        emit(
+          currentState.copyWith(
+            loadingProductIds: {
+              ...currentState.loadingProductIds
+                ..remove(event.cartProduct.product.id),
+            },
+            cartProducts: products,
+          ),
+        );
+      });
+    }
   }
 }

@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../bloc/wishlist_bloc.dart';
 
 class WishlistPage extends StatefulWidget {
+  const WishlistPage({super.key});
+
   @override
   createState() => _WishlistPage();
 }

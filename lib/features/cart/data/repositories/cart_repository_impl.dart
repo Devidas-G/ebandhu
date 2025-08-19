@@ -2,10 +2,8 @@ import 'package:dartz/dartz.dart';
 import '../../../../core/errors/failure.dart';
 import '../../../../core/utils/typedef.dart';
 import '../../domain/entities/cart_product.dart';
-import '../../domain/entities/product.dart';
 import '../../domain/repositories/cart_repository.dart';
 import '../models/cart_product.dart';
-import '../models/product.dart';
 import '../datasources/cart_remote_datasource.dart';
 import '../../../../core/errors/exception.dart';
 
@@ -72,6 +70,26 @@ class CartRepositoryImpl implements CartRepository {
       return Left(
         ApiFailure(
           'Unexpected error occurred while fetching cart items',
+          'unknown',
+        ),
+      );
+    }
+  }
+
+  @override
+  ResultFuture<List<CartProductEntity>> updateItemInCart(
+    CartProductEntity cartProduct,
+  ) async {
+    try {
+      final cartModel = CartProduct.fromEntity(cartProduct);
+      final products = await datasource.updateItemInCart(cartModel);
+      return Right(products);
+    } on CartException catch (e) {
+      return Left(ApiFailure(e.message, e.code));
+    } catch (_) {
+      return Left(
+        ApiFailure(
+          'Unexpected error occurred while updating cart item',
           'unknown',
         ),
       );

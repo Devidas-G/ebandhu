@@ -5,6 +5,8 @@ import '../../cart.dart';
 import '../widgets/cart_listview.dart';
 
 class CartPage extends StatefulWidget {
+  const CartPage({super.key});
+
   @override
   createState() => _CartPage();
 }

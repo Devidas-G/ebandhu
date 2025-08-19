@@ -26,6 +26,15 @@ final class RemoveProductFromCartEvent extends CartEvent {
   List<Object> get props => [product];
 }
 
+final class UpdateProductInCartEvent extends CartEvent {
+  final CartProductEntity cartProduct;
+
+  const UpdateProductInCartEvent(this.cartProduct);
+
+  @override
+  List<Object> get props => [cartProduct];
+}
+
 final class FetchCartEvent extends CartEvent {}
 
 final class ClearCartEvent extends CartEvent {}

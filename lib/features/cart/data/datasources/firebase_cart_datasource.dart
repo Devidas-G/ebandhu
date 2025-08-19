@@ -3,6 +3,10 @@ import '../../../../core/errors/exception.dart';
 import '../models/cart_product.dart'; // now includes quantity + product
 import 'cart_remote_datasource.dart';
 
+//! Warning: accessing Firestore directly in the datasource,
+//! any data structure changes will cause issues.
+//! use a middleware api with version control to handle data structure changes
+
 class FirebaseCartDatasource implements CartRemoteDataSource {
   final FirebaseFirestore firestore;
   final String? userId;
@@ -42,21 +46,16 @@ class FirebaseCartDatasource implements CartRemoteDataSource {
       // First, check if item already exists
       final doc = await _cartRef.doc(cartProduct.product.id.toString()).get();
 
-      int newQuantity = 1;
       if (doc.exists) {
-        final existingCartProduct = CartProduct.fromJson(doc.data()!);
-        newQuantity = existingCartProduct.quantity + 1;
+        throw CartException(
+          message: "Item already exists in cart",
+          code: 'item_exists',
+        );
+      } else {
+        await _cartRef
+            .doc(cartProduct.product.id.toString())
+            .set(cartProduct.toJson());
       }
-
-      final newCartProduct = CartProduct(
-        product: cartProduct.product,
-        quantity: newQuantity,
-      );
-
-      await _cartRef
-          .doc(cartProduct.product.id.toString())
-          .set(newCartProduct.toJson());
-
       return await fetchCartItems();
     } on FirebaseException catch (e) {
       throw CartException(
@@ -97,6 +96,23 @@ class FirebaseCartDatasource implements CartRemoteDataSource {
     } on FirebaseException catch (e) {
       throw CartException(
         message: e.message ?? 'Failed to clear cart',
+        code: e.code,
+      );
+    } catch (e) {
+      throw CartException(message: e.toString());
+    }
+  }
+
+  @override
+  Future<List<CartProduct>> updateItemInCart(CartProduct cartProduct) async {
+    try {
+      await _cartRef
+          .doc(cartProduct.product.id.toString())
+          .update(cartProduct.toJson());
+      return await fetchCartItems();
+    } on FirebaseException catch (e) {
+      throw CartException(
+        message: e.message ?? 'Failed to update item',
         code: e.code,
       );
     } catch (e) {

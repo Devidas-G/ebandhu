@@ -2,7 +2,7 @@ import '../../domain/entities/cart_product.dart';
 import 'product.dart';
 
 class CartProduct extends CartProductEntity {
-  CartProduct({required super.product, required super.quantity});
+  const CartProduct({required super.product, required super.quantity});
 
   factory CartProduct.fromEntity(CartProductEntity cartProduct) {
     return CartProduct(

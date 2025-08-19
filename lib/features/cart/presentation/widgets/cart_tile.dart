@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import '../../domain/entities/cart_product.dart';
-import '../../domain/entities/product.dart';
 
 class CartTile extends StatelessWidget {
   const CartTile({

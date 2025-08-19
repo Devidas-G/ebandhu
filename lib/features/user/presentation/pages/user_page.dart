@@ -3,6 +3,8 @@ import 'package:ebandhu/features/auth/auth.dart';
 import 'package:flutter/material.dart';
 
 class UserPage extends StatefulWidget {
+  const UserPage({super.key});
+
   @override
   createState() => _UserPage();
 }

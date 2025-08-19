@@ -4,7 +4,6 @@ import 'package:ebandhu/core/utils/typedef.dart';
 import 'package:ebandhu/features/product/product.dart';
 
 import '../../../../core/errors/failure.dart';
-import '../models/product.dart';
 
 class ProductRepositoryImpl extends ProductRepository {
   final ProductRemoteDatasource datasource;
