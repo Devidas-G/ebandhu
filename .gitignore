@@ -47,3 +47,5 @@ app.*.map.json
 # Firebase config
 google-services.json
 ios/Runner/GoogleService-Info.plist
+
+sentry.properties

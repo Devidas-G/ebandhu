@@ -52,8 +52,11 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   freezed_annotation: ^3.1.0
+  device_info_plus: ^11.5.0
+  sentry_flutter: ^9.6.0
 
 dev_dependencies:
+  sentry_dart_plugin: ^3.1.1
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
@@ -102,3 +105,9 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+sentry:
+  upload_debug_symbols: true
+  upload_source_maps: true
+  project: flutter
+  org: devidas-gaikwad
