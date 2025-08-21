@@ -1,8 +1,10 @@
 import 'package:sentry_flutter/sentry_flutter.dart';
 import '../config/env.dart';
+import 'crash_reporter.dart';
 
-class SentryReporter {
-  static Future<void> init(AppRunner? appRunner) async {
+class SentryCrashReporter implements CrashReporter {
+  @override
+  Future<void> init({required Function() appRunner}) async {
     await SentryFlutter.init((options) {
       options.dsn = Env.sentryDsn;
       options.environment = Env.environment;
@@ -13,15 +15,14 @@ class SentryReporter {
   }
 
   /// Helper to manually capture an exception
-  static Future<void> captureException(
-    dynamic throwable, {
-    dynamic stackTrace,
-  }) async {
+  @override
+  Future<void> captureException(dynamic throwable, {dynamic stackTrace}) async {
     await Sentry.captureException(throwable, stackTrace: stackTrace);
   }
 
   /// Helper to manually capture a message
-  static Future<void> captureMessage(String message) async {
+  @override
+  Future<void> captureMessage(String message) async {
     await Sentry.captureMessage(message);
   }
 }

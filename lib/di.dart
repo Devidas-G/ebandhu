@@ -3,6 +3,8 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
 
+import 'core/errors/crash_reporter.dart';
+import 'core/errors/sentry_reporter.dart';
 import 'core/network/network_info.dart';
 import 'features/auth/auth.dart';
 import 'features/cart/cart.dart';
@@ -20,6 +22,9 @@ Future<void> init() async {
 
   //! NetworkInfo
   sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(Connectivity()));
+
+  //! CrashReporter
+  sl.registerLazySingleton<CrashReporter>(() => SentryCrashReporter());
 
   //! Features - Auth
   // Bloc
